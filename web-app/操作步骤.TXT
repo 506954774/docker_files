@@ -1,0 +1,16 @@
+jdk，mysql，nginx，redis镜像：docker pull registry.cn-hangzhou.aliyuncs.com/15262592514/centos7javaweb:final
+1，拉取阿里镜像，需要账户密码：docker pull registry.cn-hangzhou.aliyuncs.com/15262592514/centos7javaweb:final
+2，拷贝zip到linux宿主机根目录，window机则拷贝到E盘，解压zip。
+3，把自己springBoot打出的jar包放进宿主机的/web-app/usr/tmp  （以linux为例）（已挂载）文件夹
+4，执行命令：
+ win：
+docker run -it -p 13456:3456 -p 13306:13306   -p 18089:8089 -v E:\web-app\usr\local\mysql\data:/usr/local/mysql/data -v E:\web-app\var\lib\redis:/var/lib/redis  -v E:\web-app\var\log\redis:/var/log/redis -v E:\web-app\etc\nginx\nginx.conf:/etc/nginx/nginx.conf -v E:\web-app\var\log\nginx:/var/log/nginx -v E:\web-app\usr\share\nginx\html:/usr/share/nginx/html -v E:\web-app\usr\tmp:/usr/tmp -v E:\web-app\mnt\logs\spring_boot_demo:/mnt/logs/spring_boot_demo  0d29a540b259
+
+linux：
+docker run -it -p 13456:3456 -p 13306:13306 -p 16379:6379 -p 18089:8089 -v /web-app/usr/local/mysql/data:/usr/local/mysql/data -v /web-app/var/lib/redis:/var/lib/redis  -v /web-app/var/log/redis:/var/log/redis -v /web-app/etc/nginx/nginx.conf:/etc/nginx/nginx.conf -v /web-app/var/log/nginx:/var/log/nginx -v /web-app/usr/share/nginx/html:/usr/share/nginx/html -v /web-app/usr/tmp:/usr/tmp -v /web-app/mnt/logs/spring_boot_demo:/mnt/logs/spring_boot_demo  0d29a540b259
+
+5，进入容器之后，执行命令：
+cd  /usr/tmp
+bash mysql-redis-nginx-start.sh
+6，nohup java -jar xxxxx.jar >/dev/null 2>&1  &
+
