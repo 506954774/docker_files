@@ -1,0 +1,27 @@
+win:
+1，添加一个host，C:\Windows\System32\drivers\etc\hosts
+127.0.0.1 myhbase
+
+2，拉取镜像：
+docker pull registry.cn-hangzhou.aliyuncs.com/15262592514/hbase-hadoop:shell
+3,首次启动容器：
+docker run -it  -h myhbase -p 2181:2181 -p 16020:16020 -p 60070:50070 5686d03236e7   bash /init/hbase-hadoop-start.sh
+4，再起一个窗口，先docker ps -l 拿到容器id，然后把hbase和hadoop两个文件夹拷贝到宿主机：
+cmd,到E盘，e:
+docker cp  1a12a35f3e67:/usr/local/src  /vhbase
+5，后续启动命令（已经挂载了hbase和hadoop到本地，数据持久化,#E:\etc\localtime是从linux里拷贝出来的,目的是保证日志里的时区一致）：
+docker run -it  -h myhbase -p 2181:2181 -p 16020:16020 -p 60070:50070  -v E:\etc\localtime:/etc/localtime -v E:\vhbase\src:/usr/local/src  5686d03236e7  bash /init/hbase-hadoop-start.sh
+
+Linux：
+1，拉取镜像：
+docker pull registry.cn-hangzhou.aliyuncs.com/15262592514/hbase-hadoop:shell
+2,首次启动容器：
+docker run -it  -h myhbase -p 2181:2181 -p 16020:16020 -p 60070:50070 5686d03236e7 
+3，再起一个窗口，先docker ps -l 拿到容器id，然后把hbase和hadoop两个文件夹拷贝到宿主机：
+cmd,到/vhbase,这样做的目的是：持久化数据，避免容器重启后数据丢失
+docker cp  f41299981883:/usr/local/src  /vhbase
+5，后续启动命令（已经挂载了hbase和hadoop到本地，持久化）：
+docker run -it  -h myhbase -p 2181:2181 -p 16020:16020 -p 60070:50070 -v /etc/localtime:/etc/localtime  -v  /vhbase:/usr/local/src  5686d03236e7 bash /init/hbase-hadoop-start.sh 
+
+注意:有时候直接启动会报错,所以可以不追加bash命令,而是启动容器之后,手动输入bash命令启动:
+#bash /init/hbase-hadoop-start.sh 
